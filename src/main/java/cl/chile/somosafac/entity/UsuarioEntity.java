@@ -43,6 +43,9 @@ public class UsuarioEntity implements UserDetails {
     @Column(name = "contrasena_hash", nullable = false)
     private String contrasenaHash;
 
+    @Column(name = "cargo")
+    private String cargo;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "tipo_usuario", nullable = false)
     private Role tipoUsuario;
@@ -90,7 +93,7 @@ public class UsuarioEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority((tipoUsuario.name())));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + tipoUsuario.name()));
     }
 
     @Override
