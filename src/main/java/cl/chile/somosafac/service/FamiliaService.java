@@ -56,7 +56,14 @@ public class FamiliaService {
             return FamiliaMapperManual.familiaToDto(familiaActualizada);
         });
     }
-
+     @Transactional(readOnly = true)
+    public List<FamiliaDTO> searchFamilias(String nombre, String ciudad, String region) {
+        List<FamiliaEntity> familias = familiaRepository.searchFamilias(nombre, ciudad, region);
+        return familias.stream()
+                .map(FamiliaMapperManual::familiaToDto)
+                .collect(Collectors.toList());
+    }
+    
     @Transactional
     public void deleteFamilia(Long id) {
         Optional<FamiliaEntity> familiaExistente = familiaRepository.findById(id);
