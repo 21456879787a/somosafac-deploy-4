@@ -5,6 +5,7 @@ import cl.chile.somosafac.entity.FamiliaEntity;
 import cl.chile.somosafac.entity.UsuarioEntity;
 import cl.chile.somosafac.repository.FamiliaRepository;
 import cl.chile.somosafac.repository.UsuarioRepository;
+import cl.chile.somosafac.security.Role;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.mail.SimpleMailMessage;
@@ -71,28 +72,22 @@ public class EmailService {
         }
     }
 
-    // COMPLETAR METODO PARA QUE SEA UN MAP CON TODOS LOS EMAILS
-    public Map<String, List<String>> obtenerEmailsDestinatarios() {
-        List<UsuarioEntity> usuarios = usuarioRepository.findAll();
-        List<FamiliaEntity> familias = familiaRepository.findAll();
+    public void enviarEmailDestinatarios(EmailDTO emailDTO) {
+        if (emailDTO == null || emailDTO.getDestinatario() == null) {
+            throw new IllegalArgumentException("El Email o el destinatario no pueden ser nulos.");
+        }
 
-        List<String> emailsUsuarios = usuarios.stream()
-                .map(UsuarioEntity::getCorreo)
-                .collect(Collectors.toList());
+        List<String> destinatarios = new ArrayList<>();
 
-        List<String> emailsFamilias = familias.stream()
-                .map(FamiliaEntity::getEmail)
-                .collect(Collectors.toList());
+        if (emailDTO.getDestinatario().equals("Listado General")) {
+            List<UsuarioEntity> usuarios = usuarioRepository.findByTipoUsuario(Role.ADMIN);
 
-        Map<String, List<String>> destinatarios = new HashMap<>();
-        destinatarios.put("usuarios", emailsUsuarios);
-        destinatarios.put("familias", emailsFamilias);
+            destinatarios = usuarios.stream()
+                    .map(UsuarioEntity::getCorreo)
+                    .collect(Collectors.toList());
+        }
 
-        return destinatarios;
-    }
-
-    public void enviarEmailConMuchosDestinatarios(List<String> destinatarios, EmailDTO emailDTO) {
-        try{
+        try {
             MimeMessage message = mailSender.createMimeMessage();
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
@@ -106,7 +101,7 @@ public class EmailService {
             message.setText(emailDTO.getMensaje());
 
             mailSender.send(message);
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new RuntimeException("Error al enviar emails: " + e.getMessage());
         }
     }
