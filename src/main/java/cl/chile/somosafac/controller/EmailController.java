@@ -12,10 +12,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api/email")
 @Tag(name = "Email", description = "Operaciones relacionadas con el envío de correos electrónicos")
@@ -43,20 +39,14 @@ public class EmailController {
         return ResponseEntity.ok("Email enviado exitosamente!");
     }
 
-//    @GetMapping()
-//    public ResponseEntity<Map<String, List<String>>> obtenerEmailsDestinatarios(){
-//        return ResponseEntity.ok(emailService.obtenerEmailsDestinatarios());
-//    }
-//
-//    @PostMapping("/general")
-//    public ResponseEntity<String> enviarEmailsDestinatarios(@Valid @RequestBody EmailDTO emailDTO) {
-////        List<String> destinatarios = emailDTO.getDestinatarios();
-//
-//        List<String> destinatarios = new ArrayList<>();
-//        destinatarios.add("nicolas2289h@gmail.com");
-//        destinatarios.add("dapnico@gmail.com");
-//
-//        emailService.enviarEmailConMuchosDestinatarios(destinatarios, emailDTO);
-//        return new ResponseEntity<>("Mensaje enviado con éxito!", HttpStatus.OK);
-//    }
+    @Operation(summary = "Enviar email a varios destinatarios", description = "Envía un email a un listado de destinatarios seleccionado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Mensaje enviado con éxito!"),
+            @ApiResponse(responseCode = "400", description = "Error en la solicitud de envío de email")
+    })
+    @PostMapping("/general")
+    public ResponseEntity<String> enviarEmailDestinatarios(@Valid @RequestBody EmailDTO emailDTO) {
+        emailService.enviarEmailDestinatarios(emailDTO);
+        return new ResponseEntity<>("Mensaje enviado con éxito!", HttpStatus.OK);
+    }
 }
