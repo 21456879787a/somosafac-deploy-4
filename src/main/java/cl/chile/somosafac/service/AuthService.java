@@ -73,6 +73,7 @@ public class AuthService {
                 .apellido(request.getApellido())
                 .correo(request.getCorreo())
                 .contrasenaHash(passwordEncoder.encode(request.getContrasenaHash()))
+                .cargo(request.getCargo())
                 .tipoUsuario(Role.ADMIN)
                 .fechaRegistro(LocalDateTime.now())
                 .aceptarTerminos(request.isAceptarTerminos())
