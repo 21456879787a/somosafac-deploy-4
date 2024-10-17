@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 
+import java.util.Map;
+
 
 @Data
 public class VoluntarioDTO {
@@ -11,9 +13,13 @@ public class VoluntarioDTO {
    @JsonProperty("Id")
     @NotNull(message = "El ID no puede ser nulo")
     private Long id;
-    @JsonProperty("usuarioId")
-    @NotNull(message = "El usuario ID no puede ser nulo")
-    private Long usuarioId;
+   
+    //@JsonProperty("usuarioId")
+    //@NotNull(message = "El usuario ID no puede ser nulo")
+    //private Long usuarioId;
+
+    @JsonProperty("usuarioVoluntario")
+    private Map<String, Object> usuarioVoluntario;
 
     @JsonProperty("Ocupacion")
     @NotBlank(message = "La ocupación no puede estar vacía")
