@@ -90,7 +90,7 @@ public class AuthController {
     @PostMapping("/solicitar-recuperar-password")
     public ResponseEntity<String> solicitarRecuperarContrasena(@RequestParam String email) {
         String resetToken = authService.generarResetToken(email);
-        String resetLink = "http://localhost:5173/reset-password/" + resetToken;
+        String resetLink = "https://family-one-silk.vercel.app/reset-password/" + resetToken;
 
         emailService.enviarEmail(
                 email,
