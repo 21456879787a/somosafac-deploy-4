@@ -81,16 +81,23 @@ public class AuthService {
 
         usuarioRepository.save(usuario);
 
-        // Verificar si el rol del usuario es "familia"
-        if (request.getTipoUsuario().equals(Role.FAMILIA)) {
-            FamiliaDTO familiaDTO = new FamiliaDTO();
+       if (request.getTipoUsuario().equals(Role.FAMILIA)) {
+            FamiliaEntity familia = new FamiliaEntity();
             // Configurar los datos necesarios para la familia
-            familiaDTO.setNombreFaUno(usuario.getNombre());
-            familiaDTO.setEmail(usuario.getCorreo());
-            familiaDTO.setUsuario(usuario.getId());
-            FamiliaEntity familia = FamiliaMapperManual.familiaToEntity(familiaDTO);
+            familia.setNombreFaUno(usuario.getNombre());
+            familia.setEmail(usuario.getCorreo());
+            familia.setUsuario(usuario);
+
             familiaRepository.save(familia);
+
+            NotificacionEntity notificacion = new NotificacionEntity();
+            notificacion.setUsuario(usuario);
+            notificacion.setMensaje("Se ha creado un nuevo usuario con el rol de familia.");
+            notificacion.setFechaEnvio(LocalDateTime.now());
+            notificacion.setVisto(false);
+            notificacionRepository.save(notificacion);
         }
+        
         UsuarioDTO usuarioDTO = UsuarioDTO.fromEntity(usuario);
         return usuarioDTO;
     }
