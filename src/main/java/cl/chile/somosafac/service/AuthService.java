@@ -54,11 +54,6 @@ public class AuthService {
         UsuarioDTO usuarioDTO = UsuarioDTO.fromEntity(usuario);
         System.out.println("Cookie logout: " + jwtCookie.getName());
         System.out.println(jwtCookie.getValue());
-
-         if (usuario.getTipoUsuario().equals(Role.FAMILIA)) {
-            response.setHeader("Location", "/familia/" + usuario.getId());
-            response.setStatus(HttpServletResponse.SC_FOUND);
-        }
         
         return usuarioDTO;
     }
