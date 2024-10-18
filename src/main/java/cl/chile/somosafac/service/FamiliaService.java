@@ -56,9 +56,9 @@ public class FamiliaService {
             return FamiliaMapperManual.familiaToDto(familiaActualizada);
         });
     }
-     @Transactional(readOnly = true)
-    public List<FamiliaDTO> searchFamilias(String nombre, String ciudad, String region) {
-        List<FamiliaEntity> familias = familiaRepository.searchFamilias(nombre, ciudad, region);
+    @Transactional(readOnly = true)
+    public List<FamiliaDTO> searchFamilias(String nombre) {
+        List<FamiliaEntity> familias = familiaRepository.findByNombreFaUnoContainingIgnoreCase(nombre);
         return familias.stream()
                 .map(FamiliaMapperManual::familiaToDto)
                 .collect(Collectors.toList());
