@@ -25,7 +25,7 @@ public class FamiliaEntity {
     @JoinColumn(name = "usuario_id")
     private UsuarioEntity usuario;
 
-    @Column(name = "nombre_fa_uno", nullable = false, length = 255)
+    @Column(name = "nombre_fa_uno", length = 255)
     private String nombreFaUno;
 
     @Column(name = "nombre_fa_dos", length = 255)
@@ -37,7 +37,7 @@ public class FamiliaEntity {
     @Column(name = "rut_fa_dos", unique = true, length = 12)
     private String rutFaDos;
 
-    @Column(name = "fecha_nacimiento_fa_uno", nullable = false)
+    @Column(name = "fecha_nacimiento_fa_uno")
     private LocalDate fechaNacimientoFaUno;
 
     @Column(name = "fecha_nacimiento_fa_dos", nullable = false)
