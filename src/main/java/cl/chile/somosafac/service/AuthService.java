@@ -5,11 +5,9 @@ import cl.chile.somosafac.DTO.PasswordDTO;
 import cl.chile.somosafac.DTO.UsuarioDTO;
 import cl.chile.somosafac.entity.FamiliaEntity;
 import cl.chile.somosafac.entity.UsuarioEntity;
-import cl.chile.somosafac.entity.NotificacionEntity;
 import cl.chile.somosafac.mapper.FamiliaMapperManual;
 import cl.chile.somosafac.repository.FamiliaRepository;
 import cl.chile.somosafac.repository.UsuarioRepository;
-import cl.chile.somosafac.repository.NotificacionRepository;
 import cl.chile.somosafac.security.JwtService;
 import cl.chile.somosafac.security.LoginRequest;
 import cl.chile.somosafac.security.RegisterRequest;
@@ -56,6 +54,11 @@ public class AuthService {
         UsuarioDTO usuarioDTO = UsuarioDTO.fromEntity(usuario);
         System.out.println("Cookie logout: " + jwtCookie.getName());
         System.out.println(jwtCookie.getValue());
+
+         //if (usuario.getTipoUsuario().equals(Role.FAMILIA)) {
+         //   response.setHeader("Location", "/familia/" + usuario.getId());
+       //     response.setStatus(HttpServletResponse.SC_FOUND);
+       // }
         
         return usuarioDTO;
     }
@@ -70,7 +73,6 @@ public class AuthService {
                 .apellido(request.getApellido())
                 .correo(request.getCorreo())
                 .contrasenaHash(passwordEncoder.encode(request.getContrasenaHash()))
-                .cargo(request.getCargo())
                 .tipoUsuario(Role.ADMIN)
                 .fechaRegistro(LocalDateTime.now())
                 .aceptarTerminos(request.isAceptarTerminos())
@@ -78,23 +80,16 @@ public class AuthService {
 
         usuarioRepository.save(usuario);
 
-       if (request.getTipoUsuario().equals(Role.FAMILIA)) {
-            FamiliaEntity familia = new FamiliaEntity();
+        // Verificar si el rol del usuario es "familia"
+        if (request.getTipoUsuario().equals(Role.FAMILIA)) {
+            FamiliaDTO familiaDTO = new FamiliaDTO();
             // Configurar los datos necesarios para la familia
-            familia.setNombreFaUno(usuario.getNombre());
-            familia.setEmail(usuario.getCorreo());
-            familia.setUsuario(usuario);
-
+            familiaDTO.setNombreFaUno(usuario.getNombre());
+            familiaDTO.setEmail(usuario.getCorreo());
+            familiaDTO.setUsuario(usuario.getId());
+            FamiliaEntity familia = FamiliaMapperManual.familiaToEntity(familiaDTO);
             familiaRepository.save(familia);
-
-            NotificacionEntity notificacion = new NotificacionEntity();
-            notificacion.setUsuario(usuario);
-            notificacion.setMensaje("Se ha creado un nuevo usuario con el rol de familia.");
-            notificacion.setFechaEnvio(LocalDateTime.now());
-            notificacion.setVisto(false);
-            notificacionRepository.save(notificacion);
         }
-        
         UsuarioDTO usuarioDTO = UsuarioDTO.fromEntity(usuario);
         return usuarioDTO;
     }
