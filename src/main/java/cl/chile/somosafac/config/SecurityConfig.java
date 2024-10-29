@@ -25,9 +25,18 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-//                                .requestMatchers("/auth/**").permitAll()
-//                                .anyRequest().authenticated()
-                                .anyRequest().permitAll()
+                                .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/usuarios/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/familias/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/email/mensaje-registro").hasAuthority("ADMIN")
+                                .requestMatchers("/api/email/general").hasAuthority("ADMIN")
+                                .requestMatchers("/api/mentorias/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/voluntarios/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/contactos/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/notas/**").hasAuthority("ADMIN")
+                                .requestMatchers("/api/notificaciones/**").hasAuthority("ADMIN")
+                                .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
+                                .anyRequest().authenticated()
                 )
                 .sessionManagement(sessionManager ->
                         sessionManager
